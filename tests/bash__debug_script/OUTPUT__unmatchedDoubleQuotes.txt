@@ -1,0 +1,7 @@
+
+Line 3: Odd number of double quotes:
+echo "This is not matched
+
+Line 4: Odd number of double quotes:
+echo "The first is matched"; echo "...but the second isn't
+

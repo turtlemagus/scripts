@@ -1,0 +1,5 @@
+echo "This is matched"
+echo "This is also matched"
+echo "This is not matched
+echo "The first is matched"; echo "...but the second isn't
+echo "Matched again"
