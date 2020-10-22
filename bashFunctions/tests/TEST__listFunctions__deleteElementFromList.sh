@@ -11,10 +11,21 @@ listStringList=()
 indexList=()
 expectedListStringList=()
 
-listStringList[${#listStringList[@]}]=''
-indexList[${#indexList[@]}]=''
-expectedListStringList[${#expectedListStringList[@]}]=''
+listStringList[${#listStringList[@]}]='zero,one,two,three,four,five'
+indexList[${#indexList[@]}]=3
+expectedListStringList[${#expectedListStringList[@]}]='zero,one,two,four,five'
 
+listStringList[${#listStringList[@]}]='zero,one,two,three,four,five'
+indexList[${#indexList[@]}]=0
+expectedListStringList[${#expectedListStringList[@]}]='one,two,three,four,five'
+
+listStringList[${#listStringList[@]}]='zero,one,two,three,four,five'
+indexList[${#indexList[@]}]=5
+expectedListStringList[${#expectedListStringList[@]}]='zero,one,two,three,four'
+
+listStringList[${#listStringList[@]}]='zero,one,two,three,four,five'
+indexList[${#indexList[@]}]=6
+expectedListStringList[${#expectedListStringList[@]}]='zero,one,two,three,four,five'
 
 if (( ${#listStringList[@]} != ${#indexList[@]} )) \
 || (( ${#listStringList[@]} != ${#expectedListStringList[@]} ))
@@ -39,25 +50,25 @@ echo '----------------------------------------------------------------'
 for (( index=0; index <= listLength - 1; index++ ))
 do
     listString="${listStringList[${index}]}"
-    index="${indexList[${index}]}"
+    deleteIndex="${indexList[${index}]}"
     expectedListString="${expectedListStringList[${index}]}"
-    # TODO: run test function deleteElementFromList
 
-    echo "listString='${listString}'"
-    echo "index='${index}'"
-    echo "expectedListString='${expectedListString}'"
-    # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    # TODO: Replace below placeholder code...!
-    # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    if (( 1 == 1 ))
+    splitStringByDelimiter "${listString}" ',' 'list'
+    splitStringByDelimiter "${expectedListString}" ',' 'expectedList'
+    deleteElementFromList ${deleteIndex} 'list'
+
+    echo "        startList=${listString}"
+    echo "            index=${deleteIndex}"
+    echo "expectedListAfter=${expectedListString}"
+
+    if (( $(getListsAreEqual 'list' 'expectedList') ))
     then
-        echo "     actualList='TODO' (PASS)"
+        echo "  actualListAfter=$(getListJoinedByDelimiter ',' 'list') (PASS)"
         testsPassed=$(( ${testsPassed} + 1 ))
     else
-        echo "     actualList='TODO' (FAIL)"
+        echo "  actualListAfter=$(getListJoinedByDelimiter ',' 'list') (FAIL)"
     fi
-    # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    echo "      lengthAfter=${#list[@]}"
 
     echo '----------------------------------------------------------------'
 done

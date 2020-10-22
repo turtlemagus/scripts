@@ -91,10 +91,27 @@ function getListJoinedByDelimiter() { # <delimiter> <varName_list>
     echo "${outputString}"
 }
 
+function deleteElementFromList() { # <index> <varName_list>
+    local index="${1}"
+    local varName_list="${2}"
+
+    local listLength=0
+    eval "listLength=\${#${varName_list}[@]}"
+
+    if (( ${index} <= $((${listLength} - 1)) ))
+    then
+        local currentIndex=0
+        for (( currentIndex = index; currentIndex <= listLength - 2; currentIndex++ ))
+        do
+            eval "${varName_list}[${currentIndex}]=\"\${${varName_list}[$((${currentIndex} + 1))]}\""
+        done
+        eval "unset ${varName_list}[$((${listLength} - 1))]"
+    fi
+}
+
 
 # TODO:
 # - insertElementIntoList <index> <newElement>
-# - deleteElementFromList <index>
 # ✓ getListsAreEqual <varName_list1> <varName_list2>
 ## - sortList <varName_list> [funcName_comparisonFunction]
 # - sortLists [(-c|--comparison-funcion) <funcName_comparisonFunction>] <varName_primaryList> [varName_secondaryList1] [varName_secondaryList2] ...
