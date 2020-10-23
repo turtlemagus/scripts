@@ -92,7 +92,7 @@ function getListJoinedByDelimiter() { # <delimiter> <varName_list>
 }
 
 function deleteElementFromList() { # <index> <varName_list>
-    local index="${1}"
+    local index=${1}
     local varName_list="${2}"
 
     local listLength=0
@@ -106,6 +106,25 @@ function deleteElementFromList() { # <index> <varName_list>
             eval "${varName_list}[${currentIndex}]=\"\${${varName_list}[$((${currentIndex} + 1))]}\""
         done
         eval "unset ${varName_list}[$((${listLength} - 1))]"
+    fi
+}
+
+function insertElementIntoList() { # <index> <value> <varName_list>
+    local index=${1}
+    local value="${2}"
+    local varName_list="${3}"
+
+    local listLength=0
+    eval "listLength=\${#${varName_list}[@]}"
+
+    if (( ${index} <= ${listLength} ))
+    then
+        local currentIndex=0
+        for (( currentIndex = listLength; currentIndex >= index; currentIndex-- ))
+        do
+            eval "${varName_list}[${currentIndex}]=\"\${${varName_list}[$((${currentIndex} - 1))]}\""
+        done
+        eval "${varName_list}[${index}]=\"${value}\""
     fi
 }
 
