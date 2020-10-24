@@ -135,7 +135,7 @@ echo "    >&2 echo"                                                             
 echo "    >&2 echo \"INTERAL ERROR: \${thisScriptFileName}: Lists are not the same length:\""    >> "${testFilePath}"
 echo "    >&2 echo"                                                                              >> "${testFilePath}"
 for listName in "${listNameList[@]}"
-do 
+do
     echo "    >&2 echo \"      <${listName}List>: \${#${listName}List[@]} elements\""                >> "${testFilePath}"
 done
 echo "    >&2 echo"                                                                              >> "${testFilePath}"

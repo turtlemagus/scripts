@@ -77,7 +77,7 @@ function getListJoinedByDelimiter() { # <delimiter> <varName_list>
     eval "listLength=\${#${varName_list}[@]}"
 
     local currentElement=''
-    eval "currentElement=\${${varName_list}[0]}"    
+    eval "currentElement=\${${varName_list}[0]}"
     local outputString="${currentElement}"
 
     local index=0
