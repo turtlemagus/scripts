@@ -7,3 +7,4 @@ function swapValues() { # <varName_value1> <varName_value2>
     eval "${varName_value1}=\"\${${varName_value2}}\""
     eval "${varName_value2}=\"${buffer}\""
 }
+

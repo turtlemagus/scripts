@@ -25,3 +25,4 @@ function validateFilePath() { # <varName_filePath>
         eval "${varName_filePath}=\"${parsedFilePath}\""
     fi
 }
+
