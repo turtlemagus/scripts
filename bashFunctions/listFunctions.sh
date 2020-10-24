@@ -117,20 +117,27 @@ function insertElementIntoList() { # <index> <value> <varName_list>
     local listLength=0
     eval "listLength=\${#${varName_list}[@]}"
 
+    local currentIndex=0
     if (( ${index} <= ${listLength} ))
     then
-        local currentIndex=0
         for (( currentIndex = listLength; currentIndex >= index; currentIndex-- ))
         do
             eval "${varName_list}[${currentIndex}]=\"\${${varName_list}[$((${currentIndex} - 1))]}\""
         done
-        eval "${varName_list}[${index}]=\"${value}\""
+    else
+        for (( currentIndex = listLength; currentIndex < index; currentIndex++ ))
+        do
+            eval "${varName_list}[${currentIndex}]=''"
+        done
     fi
+    eval "${varName_list}[${index}]=\"${value}\""
 }
 
 
 # TODO:
-# - insertElementIntoList <index> <newElement>
+# - swapElementsInList
+# - (consider creating comparison functions before starting sorting functions...!)
+# ✓ insertElementIntoList <index> <newElement>
 # ✓ getListsAreEqual <varName_list1> <varName_list2>
 ## - sortList <varName_list> [funcName_comparisonFunction]
 # - sortLists [(-c|--comparison-funcion) <funcName_comparisonFunction>] <varName_primaryList> [varName_secondaryList1] [varName_secondaryList2] ...

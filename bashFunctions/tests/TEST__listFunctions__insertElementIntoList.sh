@@ -22,15 +22,15 @@ insertValueList[${#insertValueList[@]}]='negative-zero-point-five'
 listStringList[${#listStringList[@]}]='zero, one, two'
 expectedListStringList[${#expectedListStringList[@]}]='negative-zero-point-five, zero, one, two'
 
-insertIndexList[${#insertIndexList[@]}]=4
-insertValueList[${#insertValueList[@]}]='out-of-range'
-listStringList[${#listStringList[@]}]='zero, one, two'
-expectedListStringList[${#expectedListStringList[@]}]='zero, one, two'
-
 insertIndexList[${#insertIndexList[@]}]=3
 insertValueList[${#insertValueList[@]}]='just-in-range'
 listStringList[${#listStringList[@]}]='zero, one, two'
 expectedListStringList[${#expectedListStringList[@]}]='zero, one, two, just-in-range'
+
+insertIndexList[${#insertIndexList[@]}]=6
+insertValueList[${#insertValueList[@]}]='six'
+listStringList[${#listStringList[@]}]='zero, one, two'
+expectedListStringList[${#expectedListStringList[@]}]='zero, one, two, , , , six'
 
 if (( ${#insertIndexList[@]} != ${#insertValueList[@]} )) \
 || (( ${#insertIndexList[@]} != ${#listStringList[@]} )) \
