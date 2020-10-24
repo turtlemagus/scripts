@@ -14,3 +14,4 @@ for element in "${myList[@]}"
 do
     echo "element='${element}'"
 done
+
