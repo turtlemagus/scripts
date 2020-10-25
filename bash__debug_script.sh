@@ -33,5 +33,3 @@ do
         echo
     fi
 done
-
-
