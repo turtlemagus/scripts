@@ -133,6 +133,39 @@ function insertElementIntoList() { # <index> <value> <varName_list>
     eval "${varName_list}[${index}]=\"${value}\""
 }
 
+function getFirstIndexInList() { # <searchValue> <varName_list>
+    local searchValue="${1}"
+
+    local varName_list="${2}"
+    local listLength=0
+    eval "listLength=\${#${varName_list}[@]}"
+
+    local firstIndex=-1
+    local currentIndex=0
+    local currentValue=''
+    while (( currentIndex <= listLength - 1 )) && (( firstIndex == -1 ))
+    do
+        eval "currentValue=\"\${${varName_list}[${currentIndex}]}\""
+        if [[ "${searchValue}" == "${currentValue}" ]]
+        then
+            firstIndex=${currentIndex}
+        fi
+
+        currentIndex=$((currentIndex + 1))
+    done
+    echo ${firstIndex}
+}
+
+function getIsInList() { # <searchValue> <varName_list>
+
+    if (( $(getFirstIndexInList "${1}" "${2}") == -1 ))
+    then
+        echo '0'
+    else
+        echo '1'
+    fi
+}
+
 
 # TODO:
 # - swapElementsInList
