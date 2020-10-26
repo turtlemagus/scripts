@@ -82,21 +82,7 @@ else
 
     case "${imageName}" in
         'PLUS')
-            #verticalLineRow=$(getCentreAlignedString ${terminalWidthInChars} '|')
-            #for (( lineNo = 1; lineNo <= remainingNoOfEmptyLines; lineNo++))
-            #do
-            #    if (( lineNo == $((remainingNoOfEmptyLines / 2)) ))
-            #    then
-            #        getCentreAlignedString ${terminalWidthInChars} '+' | sed -E \
-            #            -e 's|^.|#|g' -e 's| $|#|g' \
-            #            -e 's| |-|g' \
-            #            -e 's|#| |g'
-            #    else
-            #        echo "${verticalLineRow}"
-            #    fi
-            #done
             verticalLineRow=$(getCentreAlignedString ${terminalWidthInChars} '||')
-            #verticalLineRow=$(getCentreAlignedString ${terminalWidthInChars} '##')
             for (( lineNo = 1; lineNo <= remainingNoOfEmptyLines; lineNo++))
             do
                 if (( lineNo == $((remainingNoOfEmptyLines / 2)) )) \
@@ -106,10 +92,6 @@ else
                         -e 's|^.|%|g' -e 's| $|%|g' \
                         -e 's| |-|g' \
                         -e 's|%| |g'
-                    #getCentreAlignedString ${terminalWidthInChars} '##' | sed -E \
-                    #    -e 's|^.|%|g' -e 's| $|%|g' \
-                    #    -e 's| |#|g' \
-                    #    -e 's|%| |g'
                 else
                     echo "${verticalLineRow}"
                 fi
