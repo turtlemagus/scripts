@@ -12,3 +12,4 @@ function getSign() { # <number>
         echo '1'
     fi
 }
+

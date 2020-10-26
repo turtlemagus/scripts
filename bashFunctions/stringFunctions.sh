@@ -47,6 +47,46 @@ function getMaskedString() { # <startIndex> <maskingString> <string> [noOfRepeti
     echo "${string}"
 }
 
+function getLeftAlignedString() { # <targetWidth> <string>
+    local targetWidth=${1}
+    local string="${2}"
+
+    if (( targetWidth > ${#string} ))
+    then
+        echo "${string}$(printf "%$((targetWidth - ${#string}))s")"
+    else
+        echo "${string:0:${targetWidth}}"
+    fi
+}
+
+function getCentreAlignedString() { # <targetWidth> <string>
+    local targetWidth=${1}
+    local string="${2}"
+
+    if (( targetWidth > ${#string} ))
+    then
+        local noOfSpaces=$((targetWidth - ${#string}))
+        local leftWidth=$((noOfSpaces / 2))
+        local rightWidth=$((noOfSpaces - leftWidth))
+        echo "$(printf "%${leftWidth}s")${string}$(printf "%${rightWidth}s")"
+    else
+        local startCharNo=$(( (${#string} - targetWidth) / 2))
+        echo "${string:${startCharNo}:${targetWidth}}"
+    fi
+}
+
+function getRightAlignedString() { # <targetWidth> <string>
+    local targetWidth=${1}
+    local string="${2}"
+
+    if (( targetWidth > ${#string} ))
+    then
+        echo "$(printf "%$((targetWidth - ${#string}))s")${string}"
+    else
+        echo "${string:$((${#string} - targetWidth)):${targetWidth}}"
+    fi
+}
+
 # TODO:
 # - getConcatenatedString <string1> [string2] [string3] ...
 # - getRepeatedString
