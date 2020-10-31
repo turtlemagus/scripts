@@ -91,6 +91,25 @@ function getListJoinedByDelimiter() { # <delimiter> <varName_list>
     echo "${outputString}"
 }
 
+function outputList() { # <varName_list>
+    local varName_list="${1}"
+
+    local outputString=''
+    eval "outputString=\"{ '\${${varName_list}[0]}'\""
+
+    local listLength=0
+    eval "listLength=\${#${varName_list}[@]}"
+
+    local element=''
+    local index=1
+    for (( index = 1; index <= listLength - 1; index++))
+    do
+        eval "outputString=\"${outputString}, '\${${varName_list}[${index}]}'\""
+    done
+    outputString="${outputString} }"
+    echo "${outputString}"
+}
+
 function deleteElementFromList() { # <index> <varName_list>
     local index=${1}
     local varName_list="${2}"
@@ -217,3 +236,37 @@ function getLeastElementInList() { # <fnName_comparison> <varName_list>
     done
     echo "${leastValue}"
 }
+
+function justifyElementsInList() { # <varName_list> [alignment]
+    local thisFileDirPath="$(dirname "${BASH_SOURCE[0]}")"
+    source "${thisFileDirPath}/comparisonFunctions.sh"
+    source "${thisFileDirPath}/stringFunctions.sh"
+
+    local varName_list="${1}"
+
+    local alignment='LEFT'
+    (( ${#} >= 2 )) && alignment="${2}"
+
+    local longestElement=$(getGreatestElementInList 'compareStringLengths' "${varName_list}")
+
+    local listLength=''
+    eval "listLength=\${#${varName_list}[@]}"
+
+    local index=0
+    for (( index = 0; index <= listLength - 1; index++ ))
+    do
+        if [[ 'RIGHT' == ${alignment} ]]
+        then
+            eval "${varName_list}[${index}]=\"\$(getRightAlignedString ${#longestElement} \"\${${varName_list}[${index}]}\")\""
+
+        elif [[ 'CENTRE' == ${alignment} ]] || [[ 'CENTER' == ${alignment} ]]
+        then
+            eval "${varName_list}[${index}]=\"\$(getCentreAlignedString ${#longestElement} \"\${${varName_list}[${index}]}\")\""
+
+        else
+            eval "${varName_list}[${index}]=\"\$(getLeftAlignedString ${#longestElement} \"\${${varName_list}[${index}]}\")\""
+        fi
+    done
+}
+
+
