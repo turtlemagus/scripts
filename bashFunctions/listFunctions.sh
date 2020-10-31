@@ -166,14 +166,54 @@ function getIsInList() { # <searchValue> <varName_list>
     fi
 }
 
+function getGreatestElementInList() { # <fnName_comparison> <varName_list>
+    local fnName_comparison="${1}"
+    local varName_list="${2}"
 
-# TODO:
-# - swapElementsInList
-# - (consider creating comparison functions before starting sorting functions...!)
-# ✓ insertElementIntoList <index> <newElement>
-# ✓ getListsAreEqual <varName_list1> <varName_list2>
-## - sortList <varName_list> [funcName_comparisonFunction]
-# - sortLists [(-c|--comparison-funcion) <funcName_comparisonFunction>] <varName_primaryList> [varName_secondaryList1] [varName_secondaryList2] ...
+    local listLength=0
+    eval "listLength=\${#${varName_list}[@]}"
 
+    local greatestValue=''
+    eval "greatestValue=\"\${${varName_list}[0]}\""
 
+    local comparisonOutput=0
+    local currentValue=''
+    local index=1
+    for (( index = 1; index <= listLength - 1; index++ ))
+    do
+        eval "currentValue=\"\${${varName_list}[${index}]}\""
+        eval "comparisonOutput=\"\$(${fnName_comparison} \"${currentValue}\" \"${greatestValue}\")\""
 
+        if (( ${comparisonOutput} > 0 ))
+        then
+            greatestValue="${currentValue}"
+        fi
+    done
+    echo "${greatestValue}"
+}
+
+function getLeastElementInList() { # <fnName_comparison> <varName_list>
+    local fnName_comparison="${1}"
+    local varName_list="${2}"
+
+    local listLength=0
+    eval "listLength=\${#${varName_list}[@]}"
+
+    local leastValue=''
+    eval "leastValue=\"\${${varName_list}[0]}\""
+
+    local comparisonOutput=0
+    local currentValue=''
+    local index=1
+    for (( index = 1; index <= listLength - 1; index++ ))
+    do
+        eval "currentValue=\"\${${varName_list}[${index}]}\""
+        eval "comparisonOutput=\"\$(${fnName_comparison} \"${currentValue}\" \"${leastValue}\")\""
+
+        if (( ${comparisonOutput} < 0 ))
+        then
+            leastValue="${currentValue}"
+        fi
+    done
+    echo "${leastValue}"
+}
