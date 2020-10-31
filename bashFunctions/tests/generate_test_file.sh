@@ -6,6 +6,10 @@ thisScriptFileName="$(basename ${thisScriptRelativeFilePath})"
 thisScriptAbsoluteFilePath="${thisScriptAbsoluteDirPath}/${thisScriptFileName}"
 cd "${thisScriptAbsoluteDirPath}"
 
+source '../listFunctions.sh'
+source '../comparisonFunctions.sh'
+source '../stringFunctions.sh'
+
 function centreText() { # <string> <targetWidthInChars>
     local string="${1}"
     local targetWidthInChars=${2}
@@ -95,6 +99,8 @@ do
     listNameList[${#listNameList[@]}]="${listName}"
 done
 
+longestListName="$(getGreatestElementInList 'compareStringLengths' 'listNameList')"
+
 echo "IFS=''"                                                                                    >> "${testFilePath}"
 echo "thisScriptRelativeFilePath=\"\${BASH_SOURCE[0]}\""                                         >> "${testFilePath}"
 echo "thisScriptRelativeDirPath=\"\$(dirname \"\${thisScriptRelativeFilePath}\")\""              >> "${testFilePath}"
@@ -136,7 +142,7 @@ echo "    >&2 echo \"INTERAL ERROR: \${thisScriptFileName}: Lists are not the sa
 echo "    >&2 echo"                                                                              >> "${testFilePath}"
 for listName in "${listNameList[@]}"
 do
-    echo "    >&2 echo \"      <${listName}List>: \${#${listName}List[@]} elements\""                >> "${testFilePath}"
+    echo "    >&2 echo \"      $(getRightAlignedString $((${#longestListName} + 6)) "<${listName}List>"): \${#${listName}List[@]} elements\""                >> "${testFilePath}"
 done
 echo "    >&2 echo"                                                                              >> "${testFilePath}"
 echo                                                                                             >> "${testFilePath}"
@@ -159,7 +165,7 @@ echo "    # TODO: run test function ${functionName}"                            
 echo                                                                                             >> "${testFilePath}"
 for listName in "${listNameList[@]}"
 do
-    echo "    echo \"${listName}='\${${listName}}'\""                                                >> "${testFilePath}"
+    echo "    echo \"$(getRightAlignedString ${#longestListName} "${listName}")='\${${listName}}'\"" >> "${testFilePath}"
 done
 echo "    # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"                        >> "${testFilePath}"
 echo "    # TODO: Replace below placeholder code...!"                                            >> "${testFilePath}"
