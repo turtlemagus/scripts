@@ -5,25 +5,24 @@ thisScriptRelativeDirPath="$(dirname "${thisScriptRelativeFilePath}")"
 thisScriptAbsoluteDirPath="$(cd "${thisScriptRelativeDirPath}" >/dev/null && pwd)"
 thisScriptFileName="$(basename ${thisScriptRelativeFilePath})"
 thisScriptAbsoluteFilePath="${thisScriptAbsoluteDirPath}/${thisScriptFileName}"
-cd "${thisScriptAbsoluteDirPath}"
 
-source './bashFunctions/listFunctions.sh'
-source './bashFunctions/fileFunctions.sh'
+source "${thisScriptAbsoluteDirPath}/bashFunctions/fileFunctions.sh"
 
-function copyColumnNamesToList() { # <csvFilePath> <varName_list>
-    local csvFilePath="${1}"
+function getNoOfColumnsInCsvFile() { # <csvFilePath>
+    head -1 "${1}" | tr ',' '\n' | grep -c '.*'
+}
 
-    local varName_list="${2}"
-    eval "${varName_list}=()"
-
-    local headerRow="$(head -1 "${csvFilePath}" | sed -E "s|$(printf "\r")||g")"
-    local noOfFields=$(tr ',' '\n' <<< "${headerRow}" | egrep -c '.*')
-
-    local fieldNo=1
-    for (( fieldNo = 1; fieldNo <= noOfFields; fieldNo++ ))
+function getGreatestLengthFromStdin() { # (stdin)
+    local greatestLength=0
+    while read currentLine
     do
-        eval "${varName_list}[\${#${varName_list}[@]}]=\"$(cut -d ',' -f ${fieldNo} <<< "${headerRow}")\""
+        (( ${#currentLine} > ${greatestLength} )) && greatestLength=${#currentLine}
     done
+    echo ${greatestLength}
+}
+
+function leftAlignStdin() { # (stdin) <targetLength>
+    sed -E -e "s|^(.*)\$|\1$(printf "%${1}s")|g" | cut -c 1-${1}
 }
 
 if (( ${#} < 1 ))
@@ -38,56 +37,34 @@ fi
 csvFilePath="${1}"
 validateFilePath 'csvFilePath' || exit 1
 
-copyColumnNamesToList "${csvFilePath}" 'columnNames'
-for (( index = 0; index <= ${#columnNames[@]} - 1; index++ ))
+greatestLength=$(cut -d ',' -f 1 "${csvFilePath}" | getGreatestLengthFromStdin)
+output="$(                                  \
+    cut -d ',' -f 1 "${csvFilePath}"        \
+        | sed -E "s|$(printf "\r")||g"      \
+        | leftAlignStdin ${greatestLength}  \
+        | sed -E 's|^(.*)$|\1 |g'           \
+)"
+
+
+noOfColumns=$(getNoOfColumnsInCsvFile "${csvFilePath}")
+for (( columnNo=2; columnNo <= 9; columnNo++ ))
 do
-    eval "column${index}=()"
-    eval "column${index}[0]=\"${columnNames[${index}]}\""
+    greatestLength=$(cut -d ',' -f ${columnNo} "${csvFilePath}" | getGreatestLengthFromStdin)
+    output="$(                   \
+        paste                    \
+            -d '|'               \
+            <(echo "${output}")  \
+            <(                                               \
+                 cut -d ',' -f ${columnNo} "${csvFilePath}"  \
+                     | sed -E "s|$(printf "\r")||g"          \
+                     | leftAlignStdin ${greatestLength}      \
+                     | sed -E 's|^(.*)$| \1 |g'              \
+             )                                               \
+    )"
 done
 
-isHeaderRow=1
-while read -r currentRow
-do
-    if (( ${isHeaderRow} ))
-    then
-        isHeaderRow=0
-        continue
-    fi
-    currentRow="$(sed -E "s|$(printf "\r")||g" <<< "${currentRow}")"
-
-    for (( columnIndex = 0; columnIndex <= ${#columnNames[@]} - 1; columnIndex++ ))
-    do
-        columnName="column${columnIndex}"
-        eval "${columnName}[\${#${columnName}[@]}]=\"$(cut -d ',' -f $((columnIndex + 1)) <<< "${currentRow}")\""
-    done
-
-done < "${csvFilePath}"
-
-for (( columnIndex = 0; columnIndex <= ${#columnNames[@]} - 1; columnIndex++ ))
-do
-    eval "justifyElementsInList 'column${columnIndex}'"
-done
-
+echo "${output}"
 echo
-noOfRows=${#column0[@]}
-for (( rowIndex=0; rowIndex <= noOfRows - 1; rowIndex++ ))
-do
-    rowOutput=''
-    for (( columnIndex = 0; columnIndex <= ${#columnNames[@]} - 1; columnIndex++ ))
-    do
-        eval "rowOutput=\"\${rowOutput}\${column${columnIndex}[${rowIndex}]} | \""
-    done
-    echo "$(sed -E 's|\| $||g' <<< "${rowOutput}")"
-done
-echo
-
-
-
-
-
-
-
-
 
 
 
