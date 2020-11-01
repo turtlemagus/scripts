@@ -87,8 +87,12 @@ function getRightAlignedString() { # <targetWidth> <string>
     fi
 }
 
-# TODO:
-# - getConcatenatedString <string1> [string2] [string3] ...
-# - getRepeatedString
+function getChar() { # <asciiCode>
+  printf "\\$(printf '%03o' "${1}")"
+}
+
+function getAsciiCode() { # <char>
+  LC_CTYPE=C printf '%d' "'$1"
+}
 
 
