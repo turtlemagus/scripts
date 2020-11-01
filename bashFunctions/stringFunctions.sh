@@ -95,4 +95,16 @@ function getAsciiCode() { # <char>
   LC_CTYPE=C printf '%d' "'$1"
 }
 
+function padNumberWithZeroes() { # <targetNoOfDigits> <number>
+    local targetNoOfDigits=${1}
+    local number=${2}
+
+    while (( ${#number} < ${targetNoOfDigits} ))
+    do
+        number="0${number}"
+    done
+    echo "${number}"
+}
+
+
 
