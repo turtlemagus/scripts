@@ -21,12 +21,19 @@ string="${1}"
 charOutputString=''
 asciiOutputString=''
 
+hasCarriageReturnCharacters=0
 for (( charNo=0; charNo <= ${#string} - 1; charNo++ ))
 do
     currentChar="${string:${charNo}:1}"
     asciiCode="$( padNumberWithZeroes 3 $(getAsciiCode "${currentChar}") )"
 
-    outputString="${outputString}${currentChar}   "
+    if [[ '013' == ${asciiCode} ]]
+    then
+        currentChar='\r'
+        hasCarriageReturnCharacters=1
+    fi
+
+    outputString="${outputString}$(getLeftAlignedString 4 ${currentChar})"
     asciiOutputString="${asciiOutputString}${asciiCode} "
 
 done
@@ -43,3 +50,10 @@ do
 done
 echo
 
+if (( ${hasCarriageReturnCharacters} ))
+then
+    echo
+    echo '\r = Carriage Return; Note that these characters can be problematic in many Linux applications.'
+    echo '                      They can be removed using the command `sed -i -E "s|$(printf "\r")||g" <filePath>`'
+    echo
+fi
