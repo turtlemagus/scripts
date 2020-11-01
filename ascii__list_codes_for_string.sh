@@ -1,0 +1,45 @@
+IFS=''
+thisScriptRelativeFilePath="${BASH_SOURCE[0]}"
+thisScriptRelativeDirPath="$(dirname "${thisScriptRelativeFilePath}")"
+
+thisScriptAbsoluteDirPath="$(cd "${thisScriptRelativeDirPath}" >/dev/null && pwd)"
+thisScriptFileName="$(basename ${thisScriptRelativeFilePath})"
+thisScriptAbsoluteFilePath="${thisScriptAbsoluteDirPath}/${thisScriptFileName}"
+
+source "${thisScriptAbsoluteDirPath}/bashFunctions/stringFunctions.sh"
+
+if (( ${#} < 1 ))
+then
+    >&2 echo
+    >&2 echo "Usage: ${thisScriptFileName} <string>"
+    >&2 echo
+
+    exit 1
+fi
+string="${1}"
+
+charOutputString=''
+asciiOutputString=''
+
+for (( charNo=0; charNo <= ${#string} - 1; charNo++ ))
+do
+    currentChar="${string:${charNo}:1}"
+    asciiCode="$( padNumberWithZeroes 3 $(getAsciiCode "${currentChar}") )"
+
+    outputString="${outputString}${currentChar}   "
+    asciiOutputString="${asciiOutputString}${asciiCode} "
+
+done
+
+outputWidth=$(( $(tput cols) / 4 * 4 ))
+while (( ${#outputString} > 0 ))
+do
+    echo
+    echo "${outputString:0:${outputWidth}}"
+    echo "${asciiOutputString:0:${outputWidth}}"
+
+    outputString="${outputString:${outputWidth}:${#outputString}}"
+    asciiOutputString="${asciiOutputString:${outputWidth}:${#asciiOutputString}}"
+done
+echo
+
