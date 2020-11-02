@@ -26,3 +26,21 @@ function validateFilePath() { # <varName_filePath>
     fi
 }
 
+function getTempFilePath() { # [annotation]
+    local thisFileDirPath="$(dirname "${BASH_SOURCE[0]}")"
+    local callerScriptFileName="$(basename ${BASH_SOURCE[1]})"
+
+    local unindexedTempFilePath="${thisFileDirPath}/../tempFiles/TEMP__${callerScriptFileName}"
+    (( ${#} >= 1 )) && unindexedTempFilePath="${unindexedTempFilePath}__${1}"
+
+    local uniqueIndex=0
+    local tempFilePath="${unindexedTempFilePath}"
+    while [[ -e "${tempFilePath}.txt" ]]
+    do
+        uniqueIndex=$((uniqueIndex + 1))
+        tempFilePath="${unindexedTempFilePath}__${uniqueIndex}"
+    done
+
+    tempFilePath="${tempFilePath}.txt"
+    echo "${tempFilePath}"
+}
