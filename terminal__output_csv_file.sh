@@ -41,6 +41,7 @@ greatestLength=$(cut -d ',' -f 1 "${csvFilePath}" | getGreatestLengthFromStdin)
 output="$(                                  \
     cut -d ',' -f 1 "${csvFilePath}"        \
         | sed -E "s|$(printf "\r")||g"      \
+		| sed '1{G;}'                       \
         | leftAlignStdin ${greatestLength}  \
         | sed -E 's|^(.*)$|\1 |g'           \
 )"
@@ -57,13 +58,15 @@ do
             <(                                               \
                  cut -d ',' -f ${columnNo} "${csvFilePath}"  \
                      | sed -E "s|$(printf "\r")||g"          \
+					 | sed '1{G;}'                           \
                      | leftAlignStdin ${greatestLength}      \
                      | sed -E 's|^(.*)$| \1 |g'              \
              )                                               \
     )"
 done
 
-echo "${output}"
+echo
+echo "${output}" | sed -E -e '2s| |-|g' -e '2s/\|/+/g'
 echo
 
 
