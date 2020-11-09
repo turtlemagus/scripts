@@ -27,10 +27,18 @@ do
     currentChar="${string:${charNo}:1}"
     asciiCode="$( padNumberWithZeroes 3 $(getAsciiCode "${currentChar}") )"
 
-    if [[ '013' == ${asciiCode} ]]
+    if [[ '009' == ${asciiCode} ]]
+    then
+	    currentChar='\t'
+		
+    elif [[ '013' == ${asciiCode} ]]
     then
         currentChar='\r'
         hasCarriageReturnCharacters=1
+		
+    elif [[ '032' == ${asciiCode} ]]
+    then
+        currentChar='SPC'
     fi
 
     outputString="${outputString}$(getLeftAlignedString 4 ${currentChar})"
